@@ -1,12 +1,3 @@
-#header{
-    color: blueviolet;
-}
-#parent{
-    color: rgb(130, 18, 235);
-}
-#children{
-    color: rgb(65, 5, 5);
-}
-#siblings{
-    color: rgb(238, 155, 60);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

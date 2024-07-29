@@ -1,36 +1,53 @@
-import React from "react";
-import ReactDOM from "react-dom";
-/*
-const header = React.createElement(
-    "h1",
-    {id:"header", randomxyz : "abc"},
-    "first react component without boiler-plate")
-    console.log(header)
-    */
-   
-   const parent = React.createElement(
-    "div",
-    {id:"parent"},
-    [ React.createElement(
-        "div",
-        {id:"children"},
-        [   React.createElement("h1",{id:"siblings"}, "child of child of parent element"),
-            React.createElement("h1",{id:"siblings"}, "child of child of parent element")
+import React , { lazy, Suspense }from "react";
+import { createRoot } from "react-dom/client";
+import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom"
+
+import Header from "./src/Components/Header";
+import Body from "./src/Components/Body";
+import About from "./src/Components/About";
+import Error from "./src/Components/Error";
+import Contact from "./src/Components/Contact";
+import RestaurantMenu from "./src/Components/RestaurantMenu";
+
+
+const AppLayout = () => {
+    return (
+        <div>
+            <Header/>
+            <Outlet/>
+        </div>
+    )
+}
+
+const appRouter = createBrowserRouter([
+    {
+        path:"/",
+        element: <AppLayout/>,
+        errorElement: <Error/>,
+        children:[
+            {
+                path: "/",
+                element: <Body/>
+            },
+            {
+                path: "/about",
+                element: <Suspense fallback={<h1>Lazy loading is done on About component</h1>}>
+                    <About/>
+                </Suspense>,
+            },
+            {
+                path: "/contact",
+                element: <Contact/>
+            },
+            {
+                path:"restaurants/:resId",
+                element:<RestaurantMenu/>
+            }
         ]
         
-        
-    ),
-    React.createElement(
-        "div",
-        {id:"children"},
-        [
-            React.createElement("h1",{id:"siblings"}, "child2 of child of parent element"),
-            React.createElement("h1",{id:"siblings"}, "child2 of child of parent element")
-        ]
-        
-    )]
-)
-console.log(parent)
+    },
     
-const root = ReactDOM.createRoot(document.getElementById("root"))
-root.render(parent)
+])
+const root = createRoot(document.getElementById("root"))
+
+root.render(<RouterProvider router = {appRouter}/>)
