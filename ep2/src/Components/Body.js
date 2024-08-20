@@ -1,122 +1,139 @@
-import {useEffect, useState} from "react";
-import RestaurantCard ,{withpromotedLabel} from "./RestaurantCard";
+import { useContext, useEffect, useState } from "react";
+import RestaurantCard, { withpromotedLabel } from "./RestaurantCard";
 import { Link } from "react-router-dom";
 import { SWIGGY_API } from "../utils/constants";
+import { UserContext } from "../utils/UserContext";
 
 const Body = () => {
-  const [listOfRestaurants, setListOfRestaurants] = useState([])
-  const [filteredRestaurants, setFilteredRestaurants ] = useState([])
+  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
-  const RestaurantCardPromoted = withpromotedLabel(RestaurantCard)
+  const RestaurantCardPromoted = withpromotedLabel(RestaurantCard);
 
-  const [searchText,setSearchText] = useState("")
-    console.log("Body Rendered")
+  const { myName, setUserName } = useContext(UserContext);
+
+  const [searchText, setSearchText] = useState("");
+  console.log("Body Rendered");
 
   useEffect(() => {
-    fetchData()
-  },[])
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
-    try{
-      const apiFetchedData = await fetch(SWIGGY_API)
-      const JSONData = await apiFetchedData.json()
-      const resData = JSONData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-      setListOfRestaurants(resData)
-      setFilteredRestaurants(resData)
+    try {
+      const apiFetchedData = await fetch(SWIGGY_API);
+      const JSONData = await apiFetchedData.json();
 
-    }catch(error){
-      console.log(error,"Failed to fetch Data from Swiggy API")
+      const resData =
+        JSONData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+
+      setListOfRestaurants(resData);
+      setFilteredRestaurants(resData);
+    } catch (error) {
+      console.log(error, "Failed to fetch Data from Swiggy API");
     }
-  }
-const handleKeyDown =(event) => {
-  if(event.key === "Enter"){
-    const filteredRestaurant = listOfRestaurants.filter((res)=>
-      res.info.name.toLowerCase().includes(searchText.toLowerCase())
-    )
-    setFilteredRestaurants(filteredRestaurant)
-  }
-}
-  return ( 
-    listOfRestaurants.length === 0 ? <h1 className="font-extrabold centerr">Fetching Data from API...</h1> : (
-     <div className="m-10">      
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      const filteredRestaurant = listOfRestaurants.filter((res) =>
+        res.info.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredRestaurants(filteredRestaurant);
+    }
+  };
+  return (
+    <div className="bg-yellow-400 p-[35%] md:p-[10%] w-screen ">
+      {listOfRestaurants?.length == 0 && (
+        <h1 className="font-extrabold  text-center text-base md:text-2xl mb-36">
+          Fetching Data from <span className="text-orange-500">Swiggy</span>{" "}
+          API...
+        </h1>
+      )}
 {/* Search Filter */}
-      <div className="flex justify-start flex-col md:justify-center md:flex-col ">
-        <div className="flex justify-center font-bold">
-          <input 
-          placeholder="Search Restuarant..."
-            className= " bg-slate-200 p-2 mr-2"
-            type="text" 
-            value= {searchText} 
-            onChange={(e)=> {
-              setSearchText(e.target.value)
+      <div className="flex justify-center items-center flex-col mb-4 md:mb-20">
+        <div className="flex justify-center font-bold w-1/2 items-center gap-2 ">
+          <input
+            placeholder="Search Restuarant Name ..."
+            className="bg-slate-200 p-2  md:px-4 md:py-3 md:w-screen rounded-lg capitalize"
+            type="text"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
             }}
-            onKeyDown = {handleKeyDown}
-            />
-          <button 
-          
-          onClick={()=> {
-            const filteredRestaurant = listOfRestaurants.filter((res)=>
-              res.info.name.toLowerCase().includes(searchText.toLowerCase())
-            )
-            setFilteredRestaurants(filteredRestaurant)
-          }}>
-          Search 
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            className="bg-orange-500 hover:bg-orange-600 text-white p-2 md:px-4 md:py-3 rounded-lg"
+            onClick={() => {
+              const filteredRestaurant = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase())
+              );
+              setFilteredRestaurants(filteredRestaurant);
+            }}
+          >
+            Search
           </button>
         </div>
-
-        { 
-          filteredRestaurants.length> 0 ? <h2 className="font-extrabold text-center p-2 centerr mt-2 bg-red-300">{ filteredRestaurants.length} Restaurants</h2>
-          :<h2>No Restaurants Found</h2>
-        }
-    </div>
-{/* Top avgRating Filter */}
-        <button 
-         className="font-semibold font-serif bg-orange-400 p-2 my-2 hover:bg-orange-100 hover:text-orange-400 "
-         onClick={()=>{
-          const filteredList = listOfRestaurants.filter((res)=> res.info.avgRating > 4.4)
-          setFilteredRestaurants(filteredList)
-          
-        }}><h2>Top Rated Restaurants</h2>
-        </button>
-{/* All restaurants */}
-        <div className="flex flex-wrap justify-start">
-         {
-            filteredRestaurants.map((restaurant)=> {
-              return  (
-              <Link to ={"restaurants/" + restaurant.info.id } key = {restaurant.info.id} >
-                {
-                  restaurant.info.promoted ? <RestaurantCardPromoted resData={restaurant} /> : <RestaurantCard resData={restaurant}/>
-                }
-              </Link> 
-            )
-            })
-         }
+        <div className="flex justify-center font-bold w-screen items-center">
+          {filteredRestaurants?.length > 0 ? (
+            <h2 className="font-extrabold text-center p-2 mt-2 bg-transparent shadow-lg">
+              {filteredRestaurants?.length} Restaurants
+            </h2>
+          ) : (
+            <h2 className="font-extrabold text-sm md:text-md text-center p-2  mt-2 bg-transparent shadow-lg">Sorry ! No Restaurants Found</h2>
+          )}
         </div>
-     </div>
-    )
-    )
-}
+      </div>
+{/* Top avgRating Filter */}
+      <div className="flex md:justify-between justify-center flex-col md:flex-row">
+        <button
+          className="font-semibold text-sm md:text-md font-serif bg-orange-400 p-2 my-2 active:bg-orange-600 hover:bg-orange-500"
+          onClick={() => {
+            const filteredList = listOfRestaurants.filter(
+              (res) => res.info.avgRating > 4.4
+            );
+            setFilteredRestaurants(filteredList);
+          }}
+        >
+          <h2>Top Restaurants</h2>
+        </button>
 
-export default Body
+        <div className="hidden md:inline-blocks text-end">
+          <input
+            className="p-2 font-bold my-2 capitalize"
+            onChange={(e) => setUserName(e.target.value)}
+            value={myName}
+            placeholder="Enter your Name..."
+          />
+        </div>
+      </div>
 
+      {
+      /* All restaurants */
+      <div className="flex flex-wrap justify-center">
+        {filteredRestaurants.length !== 0 ? ( filteredRestaurants.map((restaurant) => {
+          return (
+            <Link
+              to={"/browse/restaurants/" + restaurant.info.id}
+              key={restaurant.info.id}
+            >
+              {restaurant.info.promoted ? (
+                <RestaurantCardPromoted resData={restaurant} />
+              ) : (
+                <RestaurantCard resData={restaurant} />
+              )}
+            </Link>
+          );
+        })):(
+          <h2 className="font-extrabold text-sm md:text-md text-center p-2  mt-2 bg-transparent shadow-lg">No Restaurants Found</h2>
+        )}
+      </div>
+      }
+    </div>
+  );
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Body;
 
 // import { useEffect, useState } from 'react';
 // import RestaurantCard from './RestaurantCard';

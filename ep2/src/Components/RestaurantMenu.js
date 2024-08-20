@@ -33,7 +33,7 @@ const RestaurantMenu = () => {
   console.log(categories);
 
   return (
-    <div className="text-center ">
+    <div className="text-center p-[35%] md:p-[10%]">
       <div className='mx-auto w-3/12'>
         <img src={CDN_URL+cloudinaryImageId}/>
       </div>
@@ -46,6 +46,7 @@ const RestaurantMenu = () => {
                   data={category?.card?.card}
                   showItem ={showIndex === index ? true : false}
                   setShowIndex = {()=> setShowIndex(index)}
+                  showIndex ={showIndex}
                   />
       }) }
     </div>
