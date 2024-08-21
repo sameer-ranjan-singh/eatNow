@@ -3,9 +3,12 @@ import cors from "cors"
 import axios from "axios"
 
 const port = 3000
-
 const app = express()
-app.use(cors())
+
+app.use(cors({
+   credentials: true,
+   orgin:["https://eatnowsameer.vercel.app/"]
+}))
 
 //GET list of Restaurants 
 app.get("api/swiggy/restaurants", async (req,res)=> {
