@@ -7,7 +7,7 @@ const UserName = () => {
   const navigate = useNavigate();
   return (
     <div className="h-screen text-end flex justify-center flex-col items-center gap-2 ">
-      {myName && <h1 className="text-center md:text-3xl md:font-extrabold font-extrabold bold text-2xl uppercase ">
+      {myName && <h1 className="text-center md:text-3xl md:font-extrabold font-extrabold bold text-2xl capitalize mb-10 ">
         Welcome {myName} !
       </h1>}
       <div className="">
