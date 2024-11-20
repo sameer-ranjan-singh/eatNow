@@ -26,7 +26,6 @@ const Body = () => {
 
       const resData =
         JSONData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
-
       setListOfRestaurants(resData);
       setFilteredRestaurants(resData);
     } catch (error) {
@@ -42,14 +41,8 @@ const Body = () => {
     }
   };
   return (
-    <div className="bg-yellow-400 p-[35%] md:p-[10%] w-screen ">
-      {listOfRestaurants?.length == 0 && (
-        <h1 className="font-extrabold  text-center text-base md:text-2xl mb-36">
-          Fetching Data from <span className="text-orange-500">Swiggy</span>{" "}
-          API...
-        </h1>
-      )}
-{/* Search Filter */}
+    // <div className="bg-yellow-400 p-[35%] md:p-[10%] w-screen ">
+    <div className="bg-yellow-400 pt-28 px-5 w-screen ">
       <div className="flex justify-center items-center flex-col mb-4 md:mb-20">
         <div className="flex justify-center font-bold w-1/2 items-center gap-2 ">
           <input
@@ -75,15 +68,35 @@ const Body = () => {
           </button>
         </div>
         <div className="flex justify-center font-bold w-screen items-center">
-          {filteredRestaurants?.length > 0 ? (
+          {filteredRestaurants?.length > 0 && (
+            <h2 className="font-extrabold text-center p-2 mt-2 bg-transparent shadow-lg">
+              {filteredRestaurants?.length} Restaurants
+            </h2>
+          )}
+          {/* {filteredRestaurants?.length > 0 ? (
             <h2 className="font-extrabold text-center p-2 mt-2 bg-transparent shadow-lg">
               {filteredRestaurants?.length} Restaurants
             </h2>
           ) : (
             <h2 className="font-extrabold text-sm md:text-md text-center p-2  mt-2 bg-transparent shadow-lg">Sorry ! No Restaurants Found</h2>
-          )}
+          )} */}
         </div>
       </div>
+
+{/* fetching data */}
+<div className="flex justify-center items-center">
+
+  {listOfRestaurants?.length == 0 && (
+    <h1 className="font-extrabold text-center text-base md:text-2xl md:mb-36 h-screen">
+      Fetching Data from <span className="text-orange-500">Swiggy</span>{" "}API...
+      <br/>
+      <span className="text-orange-500">
+       but{" "}
+      </span> 
+       looks like swiggy is not allowing my proxy server !!
+    </h1>
+  )}    
+  </div>
 {/* Top avgRating Filter */}
       <div className="flex md:justify-between justify-center flex-col md:flex-row">
         <button
